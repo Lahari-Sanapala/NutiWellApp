@@ -210,7 +210,18 @@ def analyzeCalorie():
                 tdee
             )
 
-            final_summary = f"⭐ Food Quality Score: {score}/10\n\n{text.strip()}"
+            # Assign labels based on logic thresholds
+            carbs_val = nutrient_data.get("carbs", 0)
+            prot_val = nutrient_data.get("protein", 0)
+            fat_val = nutrient_data.get("fat", 0)
+
+            carb_label = "High" if carbs_val > 80 else ("Low" if carbs_val < 30 else "Moderate")
+            prot_label = "Low" if prot_val < 15 else ("High" if prot_val > 30 else "Moderate")
+            fat_label = "High" if fat_val > 30 else ("Low" if fat_val < 10 else "Moderate")
+
+            macro_string = f"**Macro Analysis**:\n- Protein: {prot_label}\n- Carbs: {carb_label}\n- Fat: {fat_label}"
+
+            final_summary = f"⭐ Food Quality Score: {score}/10\n{macro_string}\n\n{text.strip()}"
 
             print("✅ SCORE:", score)
 
