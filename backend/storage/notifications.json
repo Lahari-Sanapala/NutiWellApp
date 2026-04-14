@@ -483,5 +483,30 @@
     "type": "Weather",
     "message": "It's hot outside. Stay hydrated and drink more water.",
     "time": "2026-04-14T06:00:00.024Z"
+  },
+  {
+    "type": "meal Reminder",
+    "message": "Time for your meal! Don't miss it.",
+    "time": "2026-04-14T06:10:00.026Z"
+  },
+  {
+    "type": "Weather",
+    "message": "It's hot outside. Stay hydrated and drink more water.",
+    "time": "2026-04-14T06:10:00.026Z"
+  },
+  {
+    "type": "Diet Tip",
+    "message": "Eat smaller portions to help manage your weight.",
+    "time": "2026-04-14T06:10:00.026Z"
+  },
+  {
+    "type": "meal Reminder",
+    "message": "Time for your meal! Don't miss it.",
+    "time": "2026-04-14T06:20:00.015Z"
+  },
+  {
+    "type": "Weather",
+    "message": "It's hot outside. Stay hydrated and drink more water.",
+    "time": "2026-04-14T06:20:00.015Z"
   }
 ]

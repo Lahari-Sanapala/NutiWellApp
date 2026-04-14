@@ -1,5 +1,5 @@
 predefined_responses = {
-   r"hello|hi|aadab|vanakkam|hola": 
+   r"\b(hello|hi|aadab|vanakkam|hola)\b": 
        "Hello! I am VitaBot, your Health & Diet assistant! How can I help you?",
 
     r".(how\s+are\s+you).": 

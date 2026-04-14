@@ -535,7 +535,6 @@ router.get('/:userId/getTodaysMealsAndNutrition', async (req, res) => {
       return mealDate === currentDate;
     });
 
-    // Aggregate nutrition
     const { totalNutrition, summaries } = todaysMeals.reduce(
       (acc, meal) => {
         if (meal.CalorieResponse) {
@@ -560,22 +559,29 @@ router.get('/:userId/getTodaysMealsAndNutrition', async (req, res) => {
       }
     );
 
+    // Calculate daily limits to give the AI context of target goals
+    const targetNutrition = calculateNutrition({
+      age: user.age,
+      gender: user.gender,
+      height: user.height,
+      weight: user.weight,
+      activityLevel: user.activityLevel
+    });
 
-    // Send all useful info
-    // meals: todaysMeals,
     res.status(200).json({
       userName: user.name,
       age: user.age,
       gender: user.gender,
+      height: user.height,
+      weight: user.weight,
+      activityLevel: user.activityLevel,
       sleepHours: user.sleepHours,
       healthIssues: user.healthIssues,
       date: currentDate,
-
-      totalNutrition,
-      summaries,
+      targetNutrition, // Includes TDEE limits
+      totalNutrition,  // Currently consumed today
+      summaries,       // Arrays of strings detailing exact foods eaten
     });
-
-
 
   } catch (err) {
     res.status(500).json({ error: 'Server error', details: err.message });
