@@ -390,6 +390,11 @@ router.get('/:userId/daily-totals', async (req, res) => {
   }
 });
 
+// Helper for IST dates
+const getISTDateStr = (dateObj) => {
+    return dateObj.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+};
+
 router.get('/:userId/weekly-totals', async (req, res) => {
   try {
     // Validate user ID
@@ -399,14 +404,17 @@ router.get('/:userId/weekly-totals', async (req, res) => {
 
     const userIdd = new mongoose.Types.ObjectId(req.params.userId);
 
-    // Get pure date strings for the 7-day range (YYYY-MM-DD format)
-    const today = getIndianDate();
+    // Get pure date strings for the 7-day range (YYYY-MM-DD format in IST)
     const dateStrings = [];
 
     for (let i = 0; i < 7; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      dateStrings.push(date.toISOString().split('T')[0]);
+        const date = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+        date.setDate(date.getDate() - i);
+        // Fallback string manually to YYYY-MM-DD
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        dateStrings.push(`${yyyy}-${mm}-${dd}`);
     }
 
     const user = await UserDetails.findOne({ userId: userIdd });
@@ -429,31 +437,28 @@ router.get('/:userId/weekly-totals', async (req, res) => {
 
     // Process each meal
     user.food.forEach(meal => {
-      const mealDate = new Date(meal.createdAt).toISOString().split('T')[0];
+      if (meal.createdAt) {
+          const mealDate = getISTDateStr(new Date(meal.createdAt));
 
-      // Only process if meal is within our 7-day window
-      if (dateStrings.includes(mealDate)) {
-        if (meal.CalorieResponse) {
-          const [calories, carbs, protein, fat] = meal.CalorieResponse.split(',').map(Number);
+          // Only process if meal is within our 7-day window
+          if (dateStrings.includes(mealDate)) {
+            if (meal.CalorieResponse) {
+              const [calories, carbs, protein, fat] = meal.CalorieResponse.split(',').map(Number);
 
-          if (
-            !isNaN(calories) &&
-            !isNaN(carbs) &&
-            !isNaN(protein) &&
-            !isNaN(fat)
-          ) {
-            dailyBreakdown[mealDate].calories += calories;
-            dailyBreakdown[mealDate].carbs += carbs;
-            dailyBreakdown[mealDate].protein += protein;
-            dailyBreakdown[mealDate].fat += fat;
-            dailyBreakdown[mealDate].mealCount += 1;
+              if (!isNaN(calories) && !isNaN(carbs) && !isNaN(protein) && !isNaN(fat)) {
+                dailyBreakdown[mealDate].calories += calories;
+                dailyBreakdown[mealDate].carbs += carbs;
+                dailyBreakdown[mealDate].protein += protein;
+                dailyBreakdown[mealDate].fat += fat;
+                dailyBreakdown[mealDate].mealCount += 1;
+
 
             weeklyTotals.calories += calories;
             weeklyTotals.carbs += carbs;
             weeklyTotals.protein += protein;
             weeklyTotals.fat += fat;
           }
-
+         }
         }
       }
     });
