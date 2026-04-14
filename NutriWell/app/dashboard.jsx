@@ -140,18 +140,18 @@ export default function NutriWellHomeScreen() {
       try {
         const res = await fetch(`http://10.33.15.69:6001/api/notifications/get?userId=${userId}`);
         const data = await res.json();
-        
+
         const lastSeenDate = await AsyncStorage.getItem('lastSeenNotificationDate');
         const lastSeen = await AsyncStorage.getItem('lastSeenNotificationCount');
-        
+
         const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
 
         let lastSeenNum = 0;
         // Only respect the saved count if the saved date matches exactly today!
         if (lastSeenDate === todayStr && lastSeen) {
-            lastSeenNum = parseInt(lastSeen, 10);
+          lastSeenNum = parseInt(lastSeen, 10);
         }
-        
+
         // If server returns more notifications than what phone last remembers today = show badge!
         if (data && data.length > lastSeenNum) {
           setUnreadNotifications(true);
@@ -199,46 +199,46 @@ export default function NutriWellHomeScreen() {
   };
 
   const addWater = async () => {
-  try {
-    const response = await fetch(`http://10.33.15.69:3000/api/water/add`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-        amount: 1,
-      }),
-    });
+    try {
+      const response = await fetch(`http://10.33.15.69:3000/api/water/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          amount: 1,
+        }),
+      });
 
-    const data = await response.json();
-    setWater(data.water);
-  } catch (error) {
-    console.error("Error adding water:", error);
-  }
-};
+      const data = await response.json();
+      setWater(data.water);
+    } catch (error) {
+      console.error("Error adding water:", error);
+    }
+  };
 
-const removeWater = async () => {
-  if (water <= 0) return;
+  const removeWater = async () => {
+    if (water <= 0) return;
 
-  try {
-    const response = await fetch(`http://10.33.15.69:3000/api/water/remove`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-        amount: 1,
-      }),
-    });
+    try {
+      const response = await fetch(`http://10.33.15.69:3000/api/water/remove`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          amount: 1,
+        }),
+      });
 
-    const data = await response.json();
-    setWater(data.water);
-  } catch (error) {
-    console.error("Error removing water:", error);
-  }
-};
+      const data = await response.json();
+      setWater(data.water);
+    } catch (error) {
+      console.error("Error removing water:", error);
+    }
+  };
 
   const fetchWeeklyTotals = async (currentUserId) => {
     if (!currentUserId) return;
@@ -413,15 +413,19 @@ const removeWater = async () => {
           </View>
 
           {userId ? (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20, marginBottom: 12 }}>
-                <Text style={[styles.welcome, { marginTop: 0, marginBottom: 0 }]}>Welcome, {fullName}</Text>
-                
-                <TouchableOpacity onPress={() => router.push('/weeklyReport')}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFEFD5', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, marginRight: 16 }}>
-                      <FontAwesome5 name="fire" size={18} color="#FF4500" />
-                      <Text style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 16, color: '#333' }}>{streak} Day Streak</Text>
+            <View style={{ flexDirection: 'column', marginTop: 20, marginBottom: 12 }}>
+              <Text style={[styles.welcome, { marginTop: 0, marginBottom: 10 }]}>Welcome, {fullName}</Text>
+
+              <TouchableOpacity style={{ alignSelf: 'flex-end', marginRight: 16 }} onPress={() => router.push('/weeklyReport')}>
+                <View style={{ alignItems: 'flex-end' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFEFD5', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20 }}>
+                    <FontAwesome5 name="fire" size={18} color="#FF4500" />
+                    <Text style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 16, color: '#333' }}>{streak} Day Streak</Text>
+                    <Ionicons name="chevron-forward" size={16} color="#FF4500" style={{ marginLeft: 4 }} />
                   </View>
-                </TouchableOpacity>
+                  <Text style={{ fontSize: 11, color: '#666', marginTop: 4, marginRight: 6 }}>View Weekly Report</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           ) : (
             <Text style={styles.welcome}>Welcome, Guest</Text>
