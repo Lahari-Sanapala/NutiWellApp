@@ -323,17 +323,53 @@ router.get('/:userId/daily-totals', async (req, res) => {
       return mealDate === currentDate;
     });
 
+    // Calculate Streaks natively using backend Dates
+    const activeDates = new Set();
+    user.food.forEach(meal => {
+        if (meal.createdAt) {
+           const mealDate = new Date(meal.createdAt).toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+           activeDates.add(mealDate);
+        }
+    });
+    
+    // Sort descending
+    const sortedDates = Array.from(activeDates).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+    
+    let currentStreak = 0;
+    
+    if (sortedDates.length > 0) {
+        let yesterdayDate = new Date(new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata' }));
+        yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+        let yesterdayStr = yesterdayDate.toLocaleDateString('en-CA'); // Defaults format correctly if mapped Date object is modified
+
+        if (sortedDates[0] === currentDate) {
+            currentStreak = 0;
+            // Iterate backwards from today
+            let iterDate = new Date(new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata' }));
+            while (activeDates.has(iterDate.toLocaleDateString('en-CA'))) {
+                currentStreak++;
+                iterDate.setDate(iterDate.getDate() - 1);
+            }
+        } else if (sortedDates[0] === yesterdayStr) {
+            currentStreak = 0;
+            // Iterate backwards from yesterday
+            let iterDate = new Date(yesterdayDate);
+            while (activeDates.has(iterDate.toLocaleDateString('en-CA'))) {
+                currentStreak++;
+                iterDate.setDate(iterDate.getDate() - 1);
+            }
+        } else {
+            // Gap between today/yesterday and last logged day -> Streak broken
+            currentStreak = 0;
+        }
+    }
+
     // Calculate totals
     const totals = todaysMeals.reduce((acc, meal) => {
       if (meal.CalorieResponse) {
         const [calories, carbs, protein, fat] = meal.CalorieResponse.split(',').map(Number);
 
-        if (
-          !isNaN(calories) &&
-          !isNaN(carbs) &&
-          !isNaN(protein) &&
-          !isNaN(fat)
-        ) {
+        if (!isNaN(calories) && !isNaN(carbs) && !isNaN(protein) && !isNaN(fat)) {
           acc.calories += calories;
           acc.carbs += carbs;
           acc.protein += protein;
@@ -345,7 +381,8 @@ router.get('/:userId/daily-totals', async (req, res) => {
 
     res.json({
       totals,
-      mealCount: todaysMeals.length
+      mealCount: todaysMeals.length,
+      currentStreak
     });
   } catch (error) {
     console.error('Error fetching daily totals:', error);

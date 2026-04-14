@@ -3,7 +3,9 @@
     "healthTips": [
       "Eat slowly and mindfully."
     ],
-    "dietTips": [],
+    "dietTips": [
+      "Try cutting down on carbs for better energy."
+    ],
     "mentalHealthTips": [],
     "flags": {
       "healthTip12": true

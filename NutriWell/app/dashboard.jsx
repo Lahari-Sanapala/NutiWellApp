@@ -129,6 +129,7 @@ export default function NutriWellHomeScreen() {
   const [water, setWater] = useState(0);
   const [waterGoal, setWaterGoal] = useState(8);
   const [unreadNotifications, setUnreadNotifications] = useState(false);
+  const [streak, setStreak] = useState(0);
 
   console.log("ActivityLevel:", activityLevel)
 
@@ -174,6 +175,7 @@ export default function NutriWellHomeScreen() {
       console.log("response from daily-totals", data);
       if (data.totals) {
         setDailyTotals(data.totals);
+        setStreak(data.currentStreak || 0);
       }
     } catch (error) {
       console.error('Error fetching daily totals:', error);
@@ -411,7 +413,14 @@ const removeWater = async () => {
           </View>
 
           {userId ? (
-            <Text style={styles.welcome}>Welcome, {fullName}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20, marginBottom: 12 }}>
+                <Text style={[styles.welcome, { marginTop: 0, marginBottom: 0 }]}>Welcome, {fullName}</Text>
+                
+                <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFEFD5', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, marginRight: 16 }}>
+                    <FontAwesome5 name="fire" size={18} color="#FF4500" />
+                    <Text style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 16, color: '#333' }}>{streak} Day Streak</Text>
+                </View>
+            </View>
           ) : (
             <Text style={styles.welcome}>Welcome, Guest</Text>
           )}

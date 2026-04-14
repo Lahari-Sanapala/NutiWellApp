@@ -178,7 +178,7 @@ async function generateNotifications() {
   }
 
   // Diet Tip (randomly)
-  if (Math.random() > 0.95) {
+  if (Math.random() > 0.85) {
     const usedSet = new Set(usedMessages[today].dietTips);
     const tip = getUniqueMessage(dietTips, usedSet);
     if (tip) {
@@ -191,7 +191,7 @@ async function generateNotifications() {
   }
 
   // Mental Health Tip (randomly)
-  if (Math.random() > 0.95) {
+  if (Math.random() > 0.85) {
     const usedSet = new Set(usedMessages[today].mentalHealthTips);
     const tip = getUniqueMessage(mentalHealthTips, usedSet);
     if (tip) {
