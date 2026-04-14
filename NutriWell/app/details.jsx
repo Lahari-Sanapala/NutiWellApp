@@ -114,7 +114,7 @@ export default function Details() {
         healthIssues: healthIssuesList,
       };
 
-      const response = await fetch("http://192.168.138.205:3000/api/details/submit", {
+      const response = await fetch("http://10.33.15.69:3000/api/details/submit", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),

@@ -20,7 +20,7 @@ export default function ForgotPassword() {
     }
 
     try {
-      const res = await fetch("http://192.168.138.205:3000/api/auth/forgot-password", {
+      const res = await fetch("http://10.33.15.69:3000/api/auth/forgot-password", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

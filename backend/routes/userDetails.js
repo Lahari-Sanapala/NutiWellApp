@@ -158,7 +158,7 @@ router.post("/upload-image", async (req, res) => {
 
 
 
-    const pythonResponse = await axios.post("http://192.168.138.205:8501/analyze", {
+    const pythonResponse = await axios.post("http://10.33.15.69:8501/analyze", {
       base64Image,
       userId,
       mealType,
@@ -176,7 +176,7 @@ router.post("/upload-image", async (req, res) => {
     console.log("🍽 Summary:", summary);
 
     // Send summary to get calorie estimation
-    const pythonResponseCalorie = await axios.post("http://192.168.138.205:8501/analyzeCalorie", {
+    const pythonResponseCalorie = await axios.post("http://10.33.15.69:8501/analyzeCalorie", {
       summary,
       userId 
     });
@@ -277,6 +277,7 @@ router.get('/:userId/meals', async (req, res) => {
         calories: calories + ' cal',
         base64Image: meal.base64Image,
         summary: meal.summary,
+        mealType: meal.mealType || "General",
 
         macros: (() => {
           if (!meal.CalorieResponse) return { carbs: 0, protein: 0, fat: 0 };
@@ -587,6 +588,66 @@ router.get('/:userId/getTodaysMealsAndNutrition', async (req, res) => {
 router.get('/', (req, res) => {
   const notifications = getAllNotifications();
   res.json(notifications);
+});
+
+// POST /:userId/meal-analysis
+router.post('/:userId/meal-analysis', async (req, res) => {
+  try {
+    const { mealType } = req.body;
+    
+    if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
+      return res.status(400).json({ error: 'Invalid user ID format' });
+    }
+    
+    if (!mealType) {
+      return res.status(400).json({ error: 'Meal type is required' });
+    }
+
+    const userIdd = new mongoose.Types.ObjectId(req.params.userId);
+    const user = await UserDetails.findOne({ userId: userIdd });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const currentDate = getIndianDate();
+
+    // Filter today's meals matching the specified meal type
+    const matchingMeals = user.food.filter(meal => {
+      const mealDate = new Date(meal.createdAt).toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+      return mealDate === currentDate && meal.mealType === mealType;
+    });
+
+    if (matchingMeals.length === 0) {
+      return res.status(404).json({ error: `No meals logged today for ${mealType}` });
+    }
+
+    // Format the items to send to the Python AI backend
+    let foodDescriptions = "";
+    matchingMeals.forEach((meal, i) => {
+      let mealName = extractMealName(meal.summary) || "Unknown food";
+      let macros = "";
+      if (meal.CalorieResponse) {
+        const [calories, carbs, protein, fat] = meal.CalorieResponse.split(',').map(x => x?.trim());
+        macros = `(${calories} calories, ${carbs}g carbs, ${protein}g protein, ${fat}g fat)`;
+      }
+      foodDescriptions += `${i+1}. ${mealName} ${macros}\n`;
+    });
+
+    // Request the AI backend
+    const pythonResponse = await axios.post("http://10.33.15.69:5001/meal-analysis", {
+      meal_type: mealType,
+      food_items: foodDescriptions
+    });
+
+    return res.status(200).json({ 
+      analysis: pythonResponse.data.analysis 
+    });
+
+  } catch (err) {
+    console.error("Error in /meal-analysis:", err);
+    res.status(500).json({ error: "Server error", details: err.message });
+  }
 });
 
 

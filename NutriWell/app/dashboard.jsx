@@ -134,7 +134,7 @@ export default function NutriWellHomeScreen() {
   const fetchDailyTotals = async (currentUserId) => {
     if (!currentUserId) return;
     try {
-      const response = await fetch(`http://192.168.138.205:3000/api/details/${currentUserId}/daily-totals`);
+      const response = await fetch(`http://10.33.15.69:3000/api/details/${currentUserId}/daily-totals`);
       const data = await response.json();
       console.log("response from daily-totals", data);
       if (data.totals) {
@@ -148,7 +148,7 @@ export default function NutriWellHomeScreen() {
   const fetchWater = async (currentUserId) => {
     if (!currentUserId) return;
     try {
-      const response = await fetch(`http://192.168.138.205:3000/api/water/${currentUserId}`);
+      const response = await fetch(`http://10.33.15.69:3000/api/water/${currentUserId}`);
       const data = await response.json();
 
       console.log("💧 Water API response:", data);
@@ -163,7 +163,7 @@ export default function NutriWellHomeScreen() {
 
   const addWater = async () => {
   try {
-    const response = await fetch(`http://192.168.138.205:3000/api/water/add`, {
+    const response = await fetch(`http://10.33.15.69:3000/api/water/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -185,7 +185,7 @@ const removeWater = async () => {
   if (water <= 0) return;
 
   try {
-    const response = await fetch(`http://192.168.138.205:3000/api/water/remove`, {
+    const response = await fetch(`http://10.33.15.69:3000/api/water/remove`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -206,7 +206,7 @@ const removeWater = async () => {
   const fetchWeeklyTotals = async (currentUserId) => {
     if (!currentUserId) return;
     try {
-      const response = await fetch(`http://192.168.138.205:3000/api/details/${currentUserId}/weekly-totals`);
+      const response = await fetch(`http://10.33.15.69:3000/api/details/${currentUserId}/weekly-totals`);
       const data = await response.json();
       console.log("response from weekly-totals", data);
       if (data.weeklyTotals) {
@@ -244,7 +244,7 @@ const removeWater = async () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await fetch(`http://192.168.138.205:3000/api/details/${userId}/edit-details`);
+        const response = await fetch(`http://10.33.15.69:3000/api/details/${userId}/edit-details`);
         const data = await response.json();
 
         console.log("🔥 FULL USER DETAILS RESPONSE:", data);

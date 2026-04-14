@@ -1,7 +1,7 @@
 # health_bot.py
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from model import get_model_response
+from model import get_model_response, get_meal_analysis
 from responses import predefined_responses
 import re
 
@@ -37,6 +37,18 @@ def chatbot():
         response = get_model_response(user_query)
 
     return jsonify({"response": response})
+
+@app.route("/meal-analysis", methods=["POST"])
+def meal_analysis():
+    data = request.get_json()
+    meal_type = data.get("meal_type")
+    food_items = data.get("food_items")
+    
+    if not meal_type or not food_items:
+        return jsonify({"error": "Missing meal_type or food_items"}), 400
+
+    analysis = get_meal_analysis(meal_type, food_items)
+    return jsonify({"analysis": analysis})
 
 if __name__ == '__main__':  # ✅ Corrected "__name__" and "__main__"
     app.run(host="0.0.0.0", port=5001, debug=True)  # ✅ Use 0.0.0.0 to make it visible to other devices

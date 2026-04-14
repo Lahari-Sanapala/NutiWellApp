@@ -438,5 +438,50 @@
     "type": "General Reminder",
     "message": "Don’t forget to take care of your health today!",
     "time": "2026-04-14T05:10:00.150Z"
+  },
+  {
+    "type": "Mental Health Tip",
+    "message": "Keep a gratitude journal to focus on the positive aspects of your life.",
+    "time": "2026-04-14T05:20:00.060Z"
+  },
+  {
+    "type": "Weather",
+    "message": "It's hot outside. Stay hydrated and drink more water.",
+    "time": "2026-04-14T05:30:00.051Z"
+  },
+  {
+    "type": "Weather",
+    "message": "It's hot outside. Stay hydrated and drink more water.",
+    "time": "2026-04-14T05:40:00.035Z"
+  },
+  {
+    "type": "Mental Health Tip",
+    "message": "Limit screen time before bed to improve sleep quality.",
+    "time": "2026-04-14T05:40:00.035Z"
+  },
+  {
+    "type": "Weather",
+    "message": "It's hot outside. Stay hydrated and drink more water.",
+    "time": "2026-04-14T05:50:00.028Z"
+  },
+  {
+    "type": "Diet Tip",
+    "message": "Try cutting down on carbs for better energy.",
+    "time": "2026-04-14T05:50:00.028Z"
+  },
+  {
+    "type": "Mental Health Tip",
+    "message": "Take time each day to relax and unwind; it's essential for mental well-being.",
+    "time": "2026-04-14T05:50:00.028Z"
+  },
+  {
+    "type": "meal Reminder",
+    "message": "Time for your meal! Don't miss it.",
+    "time": "2026-04-14T06:00:00.024Z"
+  },
+  {
+    "type": "Weather",
+    "message": "It's hot outside. Stay hydrated and drink more water.",
+    "time": "2026-04-14T06:00:00.024Z"
   }
 ]

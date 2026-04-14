@@ -111,7 +111,7 @@ const SnapMeal = () => {
         throw new Error("Compressed image is still too large (over ~12MB Base64 limit).");
       }
 
-      const userResponse = await fetch(`http://192.168.138.205:3000/api/details/${userId}/edit-details`);
+      const userResponse = await fetch(`http://10.33.15.69:3000/api/details/${userId}/edit-details`);
       const userDetails = await userResponse.json();
 
       const {
@@ -127,7 +127,7 @@ const SnapMeal = () => {
       } = userDetails;
 
 
-      const response = await fetch(`http://192.168.138.205:3000/api/details/upload-image`, {
+      const response = await fetch(`http://10.33.15.69:3000/api/details/upload-image`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

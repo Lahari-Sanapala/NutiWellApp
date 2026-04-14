@@ -73,3 +73,33 @@ def get_model_response(user_query,user_data):
         return response.json()["choices"][0]["message"]["content"]
     else:
         return f"Error: {response.status_code}, {response.text}"
+
+def get_meal_analysis(meal_type, food_items):
+    prompt = f"""
+    The user is asking for an analysis of their {meal_type}. 
+    They have consumed the following items:
+    {food_items}
+
+    Please provide a concise and highly encouraging nutritional analysis for this {meal_type}.
+    - Is this a balanced {meal_type}?
+    - If there are too many carbs, fats, or low protein, gently point it out.
+    - Provide 2-3 bullet points of simple suggestions for improvement.
+    
+    Keep the tone friendly, helpful, and strictly medical/nutritional. Keep the response to 4-6 short paragraphs/bullet points max.
+    """
+
+    payload = {
+        "model": "llama-3.1-8b-instant",
+        "messages": [
+            {"role": "system", "content": "You are VitaBot, a knowledgeable AI health and dietician assistant."},
+            {"role": "user", "content": prompt},
+        ],
+        "temperature": 0.5,
+    }
+
+    response = requests.post(API_URL, json=payload, headers=HEADERS)
+
+    if response.status_code == 200:
+        return response.json()["choices"][0]["message"]["content"]
+    else:
+        return f"Error: {response.status_code}, {response.text}"
