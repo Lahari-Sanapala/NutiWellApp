@@ -1,0 +1,12 @@
+node_modules/
+myenv/
+.env
+*.env
+running.txt
+
+env/
+.myenv/
+virtualenv/
+venv/
+.venv/
+env/

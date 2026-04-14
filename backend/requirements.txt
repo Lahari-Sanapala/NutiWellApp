@@ -1,0 +1,29 @@
+# Core web framework
+Flask
+flask-cors
+gunicorn
+
+# Environment & utilities
+python-dotenv
+requests
+pillow
+numpy
+
+# Google AI SDKs
+google-generativeai
+google-genai
+google-api-python-client
+google-auth
+google-auth-httplib2
+
+# MongoDB
+pymongo
+dnspython
+
+# gRPC / protobuf (let pip resolve compatible versions)
+grpcio
+grpcio-status
+protobuf
+google-api-core[grpc]
+googleapis-common-protos
+proto-plus
