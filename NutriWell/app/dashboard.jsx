@@ -128,8 +128,43 @@ export default function NutriWellHomeScreen() {
 
   const [water, setWater] = useState(0);
   const [waterGoal, setWaterGoal] = useState(8);
+  const [unreadNotifications, setUnreadNotifications] = useState(false);
 
   console.log("ActivityLevel:", activityLevel)
+
+  // Poll for Unread Notifications Badge
+  useEffect(() => {
+    if (!userId) return;
+    const checkUnread = async () => {
+      try {
+        const res = await fetch(`http://10.33.15.69:6001/api/notifications/get?userId=${userId}`);
+        const data = await res.json();
+        
+        const lastSeenDate = await AsyncStorage.getItem('lastSeenNotificationDate');
+        const lastSeen = await AsyncStorage.getItem('lastSeenNotificationCount');
+        
+        const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+
+        let lastSeenNum = 0;
+        // Only respect the saved count if the saved date matches exactly today!
+        if (lastSeenDate === todayStr && lastSeen) {
+            lastSeenNum = parseInt(lastSeen, 10);
+        }
+        
+        // If server returns more notifications than what phone last remembers today = show badge!
+        if (data && data.length > lastSeenNum) {
+          setUnreadNotifications(true);
+        } else {
+          setUnreadNotifications(false);
+        }
+      } catch (err) {
+        console.error("Error polling notifications for badge", err);
+      }
+    };
+    checkUnread();
+    const interval = setInterval(checkUnread, 10000);
+    return () => clearInterval(interval);
+  }, [userId]);
 
   const fetchDailyTotals = async (currentUserId) => {
     if (!currentUserId) return;
@@ -355,9 +390,22 @@ const removeWater = async () => {
             )}
 
             <Text style={styles.appTitle}>NutriWell</Text>
-            <Pressable onPress={() => router.push('/App')}>
-              <View style={[styles.notificationCircle, { backgroundColor: '#e0e0e0' }]}>
+            <Pressable onPress={() => { setUnreadNotifications(false); router.push('/App'); }}>
+              <View style={[styles.notificationCircle, { backgroundColor: '#e0e0e0', position: 'relative' }]}>
                 <Ionicons name="notifications-outline" size={22} color="green" />
+                {unreadNotifications && (
+                  <View style={{
+                    position: 'absolute',
+                    top: 6,
+                    right: 8,
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    backgroundColor: 'red',
+                    borderWidth: 1,
+                    borderColor: 'white'
+                  }} />
+                )}
               </View>
             </Pressable>
           </View>

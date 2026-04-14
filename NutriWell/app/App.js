@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const router = useRouter();
@@ -16,23 +17,40 @@ export default function App() {
 
   const [lastUpdated, setLastUpdated] = useState(new Date());
 
+  const [userId, setUserId] = useState(null);
+  
+  // Also import AsyncStorage at the top, since it is needed
+  useEffect(() => {
+    const fetchUserId = async () => {
+      const id = await AsyncStorage.getItem("userId");
+      if (id) setUserId(id);
+    };
+    fetchUserId();
+  }, []);
+
   const fetchNotifications = () => {
-    fetch("http://10.33.15.69:6001/api/notifications/get")
+    if (!userId) return;
+    fetch(`http://10.33.15.69:6001/api/notifications/get?userId=${userId}`)
       .then(res => res.json())
       .then(data => {
         setNotifications(data);
         setLastUpdated(new Date());
+        
+        // Save length as "seen"
+        const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+        AsyncStorage.setItem('lastSeenNotificationDate', todayStr);
+        AsyncStorage.setItem('lastSeenNotificationCount', data.length.toString());
       })
       .catch(err => console.error('Error fetching notifications:', err));
   };
 
   useEffect(() => {
-    fetchNotifications(); // Fetch immediately on mount
+    if (!userId) return;
+    fetchNotifications(); 
 
     const interval = setInterval(fetchNotifications, 10000); // Fetch every 10 seconds
-
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, []);
+    return () => clearInterval(interval); 
+  }, [userId]);
 
   return (
     <ImageBackground

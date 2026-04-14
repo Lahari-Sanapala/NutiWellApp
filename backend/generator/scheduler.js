@@ -18,16 +18,10 @@ async function startScheduler() {
     const newNotifs = await generateNotifications();
 
     if (!newNotifs || !newNotifs.length) {
-      // If no notifications are generated, use a fallback message
-      const fallback = {
-        type: 'General Reminder',
-        message: 'Don’t forget to take care of your health today!',
-        time: new Date(),
-      };
-      await addNotification(fallback);  // Ensure the notification is stored correctly
-      console.log('Fallback Notification:', fallback);
+      // If no new notifications are generated, just skip. Don't spam fallbacks.
+      console.log('ℹ️ No new notifications matching current time window.');
     } else {
-      console.log('Generated Notifications:', newNotifs);
+      console.log('✅ Generated Notifications:', newNotifs);
     }
   });
 }

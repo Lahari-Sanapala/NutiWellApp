@@ -1,45 +1,12 @@
 {
-  "2026-04-13": {
-    "healthTips": [
-      "Avoid sugar after 6 PM.",
-      "Eat slowly and mindfully."
-    ],
-    "dietTips": [
-      "Reduce your intake of red and processed meats; choose lean proteins like chicken or fish."
-    ],
-    "mentalHealthTips": [
-      "Talk to someone you trust when you're feeling overwhelmed; sharing can lighten the load.",
-      "Limit screen time before bed to improve sleep quality."
-    ]
-  },
   "2026-04-14": {
     "healthTips": [
-      "Drinking water before meals can help with digestion and prevent overeating.",
-      "Start your day with a glass of warm water.",
-      "Avoid skipping breakfast; it kick-starts your metabolism and provides energy for the day.",
-      "Ensure you're getting enough calcium and vitamin D to support bone health."
+      "Eat slowly and mindfully."
     ],
-    "dietTips": [
-      "Choose whole fruits over fruit juices to benefit from fiber.",
-      "Reduce your intake of red and processed meats; choose lean proteins like chicken or fish.",
-      "Add more vegetables to your meals for better digestion.",
-      "Use herbs and spices to flavor your food instead of salt.",
-      "Limit sugary snacks and opt for nuts or yogurt as healthier alternatives.",
-      "Stay hydrated by drinking water throughout the day.",
-      "Read nutrition labels to make informed food choices.",
-      "Try cutting down on carbs for better energy.",
-      "Eat smaller portions to help manage your weight."
-    ],
-    "mentalHealthTips": [
-      "Take 5 minutes to meditate for your mental well-being.",
-      "Learn to say no to commitments that cause unnecessary stress.",
-      "Seek professional help if you're struggling; it's a sign of strength, not weakness.",
-      "Set realistic goals and break them into manageable steps.",
-      "Engage in activities that bring you joy, whether it's a hobby or spending time with loved ones.",
-      "Practice mindfulness or meditation to reduce stress and improve focus.",
-      "Keep a gratitude journal to focus on the positive aspects of your life.",
-      "Limit screen time before bed to improve sleep quality.",
-      "Take time each day to relax and unwind; it's essential for mental well-being."
-    ]
+    "dietTips": [],
+    "mentalHealthTips": [],
+    "flags": {
+      "healthTip12": true
+    }
   }
 }

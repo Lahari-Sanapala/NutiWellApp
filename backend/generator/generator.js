@@ -125,46 +125,60 @@ async function generateNotifications() {
     usedMessages[today] = {
       healthTips: [],
       dietTips: [],
-      mentalHealthTips: []
+      mentalHealthTips: [],
+      flags: {} // Prevent identical duplicates
     };
   }
+  if (!usedMessages[today].flags) {
+    usedMessages[today].flags = {};
+  }
+
 
   // Meal Reminders
   Object.entries(mealTimes).forEach(([meal, { start, end }]) => {
     if (isInReminderWindow(start, end)) {
-      const msg = `Time for your ${meal}! Don't miss it.`;
-      const notification = { type: `${meal} Reminder`, message: msg, time: now };
-      notifs.push(notification);
-      storeNotification(`${meal} Reminder`, msg, now);
-      console.log('Generated Notification:', notification);
+      if (!usedMessages[today].flags[`${meal}Reminder`]) {
+        usedMessages[today].flags[`${meal}Reminder`] = true;
+        const msg = `Time for your ${meal}! Don't miss it.`;
+        const notification = { type: `${meal} Reminder`, message: msg, time: now };
+        notifs.push(notification);
+        storeNotification(`${meal} Reminder`, msg, now);
+        console.log('Generated Notification:', notification);
+      }
     }
   });
 
   // Weather-based Notification
   const temperature = await getTemperature();
   if (temperature > 35 && [11, 15].includes(hour)) {
-    const msg = "It's hot outside. Stay hydrated and drink more water.";
-    const notification = { type: "Weather", message: msg, time: now };
-    notifs.push(notification);
-    storeNotification("Weather", msg, now);
-    console.log('Generated Notification:', notification);
-  }
-
-  // Health Tip (every 4 hours)
-  if (hour % 4 === 0) {
-    const usedSet = new Set(usedMessages[today].healthTips);
-    const tip = getUniqueMessage(healthTips, usedSet);
-    if (tip) {
-      usedMessages[today].healthTips.push(tip);
-      const notification = { type: "Health Tip", message: tip, time: now };
+    if (!usedMessages[today].flags[`weather${hour}`]) {
+      usedMessages[today].flags[`weather${hour}`] = true;
+      const msg = "It's hot outside. Stay hydrated and drink more water.";
+      const notification = { type: "Weather", message: msg, time: now };
       notifs.push(notification);
-      storeNotification("Health Tip", tip, now);
+      storeNotification("Weather", msg, now);
       console.log('Generated Notification:', notification);
     }
   }
 
+  // Health Tip (every 4 hours)
+  if (hour % 4 === 0) {
+    if (!usedMessages[today].flags[`healthTip${hour}`]) {
+      usedMessages[today].flags[`healthTip${hour}`] = true;
+      const usedSet = new Set(usedMessages[today].healthTips);
+      const tip = getUniqueMessage(healthTips, usedSet);
+      if (tip) {
+        usedMessages[today].healthTips.push(tip);
+        const notification = { type: "Health Tip", message: tip, time: now };
+        notifs.push(notification);
+        storeNotification("Health Tip", tip, now);
+        console.log('Generated Notification:', notification);
+      }
+    }
+  }
+
   // Diet Tip (randomly)
-  if (Math.random() > 0.7) {
+  if (Math.random() > 0.95) {
     const usedSet = new Set(usedMessages[today].dietTips);
     const tip = getUniqueMessage(dietTips, usedSet);
     if (tip) {
@@ -177,7 +191,7 @@ async function generateNotifications() {
   }
 
   // Mental Health Tip (randomly)
-  if (Math.random() > 0.7) {
+  if (Math.random() > 0.95) {
     const usedSet = new Set(usedMessages[today].mentalHealthTips);
     const tip = getUniqueMessage(mentalHealthTips, usedSet);
     if (tip) {
