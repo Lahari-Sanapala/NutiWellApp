@@ -27,11 +27,11 @@ router.get('/get', async (req, res) => {
     // Contextual Smart Meal Check
     if (userId && mongoose.Types.ObjectId.isValid(userId)) {
       const user = await UserDetails.findOne({ userId: new mongoose.Types.ObjectId(userId) });
-      
+
       if (user) {
         const currentDate = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
         const currentHour = new Date().getHours(); // Server time hour (or configure timezone logic)
-        
+
         // Find which meal types have been logged today
         const loggedMeals = new Set();
         user.food.forEach(meal => {
@@ -42,21 +42,21 @@ router.get('/get', async (req, res) => {
         });
 
         const smartAlerts = [];
-        
+
         // Breakfast logic: missing after 11:00 AM
         if (currentHour >= 11 && !loggedMeals.has("Breakfast")) {
           smartAlerts.push({
             type: "Urgent Alert",
-            message: "⚠️ You haven't logged any Breakfast yet! Keep your metabolism active.",
+            message: "You haven't logged any Breakfast yet! Keep your metabolism active.",
             time: new Date()
           });
         }
-        
+
         // Lunch logic: missing after 3:00 PM (15:00)
         if (currentHour >= 15 && !loggedMeals.has("Lunch")) {
           smartAlerts.push({
             type: "Urgent Alert",
-            message: "⚠️ You missed logging Lunch today. Take a quick break and eat!",
+            message: "You missed logging Lunch today. Take a quick break and eat!",
             time: new Date()
           });
         }
@@ -65,7 +65,7 @@ router.get('/get', async (req, res) => {
         if (currentHour >= 21 && !loggedMeals.has("Dinner")) {
           smartAlerts.push({
             type: "Urgent Alert",
-            message: "⚠️ You haven't logged your Dinner. Try not to eat too close to bedtime!",
+            message: "You haven't logged your Dinner. Try not to eat too close to bedtime!",
             time: new Date()
           });
         }

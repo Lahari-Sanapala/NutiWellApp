@@ -1,7 +1,67 @@
 [
   {
+    "type": "Mental Health Tip",
+    "message": "Spend time outdoors to boost your mood and vitamin D levels.",
+    "time": "2026-04-15T10:50:00.006Z"
+  },
+  {
+    "type": "Mental Health Tip",
+    "message": "Take 5 minutes to meditate for your mental well-being.",
+    "time": "2026-04-15T11:32:33.486Z"
+  },
+  {
+    "type": "Mental Health Tip",
+    "message": "Limit screen time before bed to improve sleep quality.",
+    "time": "2026-04-15T11:50:59.460Z"
+  },
+  {
+    "type": "dinner Reminder",
+    "message": "Time for your dinner! Don't miss it.",
+    "time": "2026-04-15T13:00:58.137Z"
+  },
+  {
     "type": "Diet Tip",
-    "message": "Try cutting down on carbs for better energy.",
-    "time": "2026-04-14T08:00:00.008Z"
+    "message": "Start your day with a high-protein breakfast to keep you full longer.",
+    "time": "2026-04-15T13:11:28.983Z"
+  },
+  {
+    "type": "Mental Health Tip",
+    "message": "Take time each day to relax and unwind; it's essential for mental well-being.",
+    "time": "2026-04-15T13:40:02.049Z"
+  },
+  {
+    "type": "Mental Health Tip",
+    "message": "Take 5 minutes to meditate for your mental well-being.",
+    "time": "2026-04-15T14:00:04.571Z"
+  },
+  {
+    "type": "Diet Tip",
+    "message": "Eat smaller portions to help manage your weight.",
+    "time": "2026-04-15T14:14:25.057Z"
+  },
+  {
+    "type": "Health Tip",
+    "message": "Regular handwashing is one of the best ways to prevent the spread of illness.",
+    "time": "2026-04-15T14:31:37.493Z"
+  },
+  {
+    "type": "Mental Health Tip",
+    "message": "Take time each day to relax and unwind; it's essential for mental well-being.",
+    "time": "2026-04-15T14:40:10.047Z"
+  },
+  {
+    "type": "Diet Tip",
+    "message": "Read nutrition labels to make informed food choices.",
+    "time": "2026-04-15T15:43:21.582Z"
+  },
+  {
+    "type": "Diet Tip",
+    "message": "Start your day with a high-protein breakfast to keep you full longer.",
+    "time": "2026-04-15T15:55:03.066Z"
+  },
+  {
+    "type": "Mental Health Tip",
+    "message": "Seek professional help if you're struggling; it's a sign of strength, not weakness.",
+    "time": "2026-04-15T16:10:00.008Z"
   }
 ]

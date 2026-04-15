@@ -11,7 +11,7 @@ require('dotenv').config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 
-const baseURL = process.env.BASE_URL;
+const baseURL = process.env.BASE_URL || '10.33.15.69:3000';
 
 // Sign up
 router.post("/signup", async (req, res) => {
@@ -131,6 +131,16 @@ router.post('/forgot-password', async (req, res) => {
 
     const resetToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
 
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.log("\n==================================");
+      console.log("⚠️  EMAIL CREDENTIALS MISSING! ⚠️");
+      console.log("Instead of sending an email, here is your reset link:");
+      console.log(`http://${baseURL}/api/auth/reset-password/${resetToken}`);
+      console.log("==================================\n");
+      
+      return res.status(200).json({ message: 'Test mode: Reset link shown in server console' });
+    }
+
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -140,17 +150,50 @@ router.post('/forgot-password', async (req, res) => {
     });
 
     const mailOptions = {
-      from: 'asiyashaik7867@gmail.com',
+      from: process.env.EMAIL_USER,
       to: email,
       subject: 'Password Reset',
-      text: `You requested a password reset. Click here to reset: http://${baseURL}/reset-password/${resetToken}`,
+      text: `You requested a password reset. Click here to reset: http://${baseURL}/api/auth/reset-password/${resetToken}`,
     };
 
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Password reset email sent' });
   } catch (error) {
+    console.error("Forgot password error:", error);
     res.status(500).json({ message: 'Server error' });
   }
+});
+
+// GET: Serve the HTML page for users who clicked the email link
+router.get('/reset-password/:token', (req, res) => {
+  const { token } = req.params;
+  
+  const htmlForm = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Reset Password</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <style>
+        body { font-family: -apple-system, sans-serif; background-color: #f8ede1; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 350px; }
+        h2 { color: #2F4F4F; text-align: center; margin-top: 0; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; background: #2F4F4F; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h2>Reset Password</h2>
+        <form action="/api/auth/reset-password/${token}" method="POST">
+          <input type="password" name="newPassword" placeholder="Enter new password" required minlength="6">
+          <button type="submit">Update Password</button>
+        </form>
+      </div>
+    </body>
+    </html>
+  `;
+  res.send(htmlForm);
 });
 
 // Reset password
@@ -170,10 +213,11 @@ router.post('/reset-password/:token', async (req, res) => {
     user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
 
-    res.status(200).json({ message: 'Password has been reset successfully' });
+    // After success, show a nice success page or redirect to app
+    res.status(200).send("<html><body style='text-align:center; padding: 50px; font-family:sans-serif;'><h2>Password reset successfully!</h2><p>You can now return to the app and log in.</p></body></html>");
   } catch (error) {
     console.error('Error resetting password:', error);
-    res.status(400).json({ message: 'Invalid token or user not found' });
+    res.status(400).send("<html><body style='text-align:center; padding: 50px; font-family:sans-serif; color:red;'><h2>Error!</h2><p>Invalid or expired link. Please request a new one.</p></body></html>");
   }
 });
 

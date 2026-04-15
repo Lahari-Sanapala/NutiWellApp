@@ -20,7 +20,7 @@ const activityMultipliers = {
 
 function getWaterGoal(TDEE) {
   const liters = TDEE * 0.001;
-  return Math.round(liters / 0.25); // glasses
+  return Math.round(liters / 0.25); // glassesh
 }
 
 function calculateNutrition({ age, gender, height, weight, activityLevel }) {
@@ -178,7 +178,7 @@ router.post("/upload-image", async (req, res) => {
     // Send summary to get calorie estimation
     const pythonResponseCalorie = await axios.post("http://10.33.15.69:8501/analyzeCalorie", {
       summary,
-      userId 
+      userId
     });
 
     console.log("🍽 Calorie response data:", pythonResponseCalorie.data);
@@ -197,8 +197,8 @@ router.post("/upload-image", async (req, res) => {
       base64Image,
       mealType,
       CalorieResponse: `${calorieData.calories},${calorieData.carbs},${calorieData.protein},${calorieData.fat}`,
-      summary: calorieData.summary,   
-      score: calorieData.score 
+      summary: calorieData.summary,
+      score: calorieData.score
     };
 
 
@@ -326,42 +326,42 @@ router.get('/:userId/daily-totals', async (req, res) => {
     // Calculate Streaks natively using backend Dates
     const activeDates = new Set();
     user.food.forEach(meal => {
-        if (meal.createdAt) {
-           const mealDate = new Date(meal.createdAt).toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
-           activeDates.add(mealDate);
-        }
+      if (meal.createdAt) {
+        const mealDate = new Date(meal.createdAt).toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+        activeDates.add(mealDate);
+      }
     });
-    
+
     // Sort descending
     const sortedDates = Array.from(activeDates).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-    
-    let currentStreak = 0;
-    
-    if (sortedDates.length > 0) {
-        let yesterdayDate = new Date(new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata' }));
-        yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-        let yesterdayStr = yesterdayDate.toLocaleDateString('en-CA'); // Defaults format correctly if mapped Date object is modified
 
-        if (sortedDates[0] === currentDate) {
-            currentStreak = 0;
-            // Iterate backwards from today
-            let iterDate = new Date(new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata' }));
-            while (activeDates.has(iterDate.toLocaleDateString('en-CA'))) {
-                currentStreak++;
-                iterDate.setDate(iterDate.getDate() - 1);
-            }
-        } else if (sortedDates[0] === yesterdayStr) {
-            currentStreak = 0;
-            // Iterate backwards from yesterday
-            let iterDate = new Date(yesterdayDate);
-            while (activeDates.has(iterDate.toLocaleDateString('en-CA'))) {
-                currentStreak++;
-                iterDate.setDate(iterDate.getDate() - 1);
-            }
-        } else {
-            // Gap between today/yesterday and last logged day -> Streak broken
-            currentStreak = 0;
+    let currentStreak = 0;
+
+    if (sortedDates.length > 0) {
+      let yesterdayDate = new Date(new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata' }));
+      yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+      let yesterdayStr = yesterdayDate.toLocaleDateString('en-CA'); // Defaults format correctly if mapped Date object is modified
+
+      if (sortedDates[0] === currentDate) {
+        currentStreak = 0;
+        // Iterate backwards from today
+        let iterDate = new Date(new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata' }));
+        while (activeDates.has(iterDate.toLocaleDateString('en-CA'))) {
+          currentStreak++;
+          iterDate.setDate(iterDate.getDate() - 1);
         }
+      } else if (sortedDates[0] === yesterdayStr) {
+        currentStreak = 0;
+        // Iterate backwards from yesterday
+        let iterDate = new Date(yesterdayDate);
+        while (activeDates.has(iterDate.toLocaleDateString('en-CA'))) {
+          currentStreak++;
+          iterDate.setDate(iterDate.getDate() - 1);
+        }
+      } else {
+        // Gap between today/yesterday and last logged day -> Streak broken
+        currentStreak = 0;
+      }
     }
 
     // Calculate totals
@@ -392,7 +392,7 @@ router.get('/:userId/daily-totals', async (req, res) => {
 
 // Helper for IST dates
 const getISTDateStr = (dateObj) => {
-    return dateObj.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+  return dateObj.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
 };
 
 router.get('/:userId/weekly-totals', async (req, res) => {
@@ -408,13 +408,13 @@ router.get('/:userId/weekly-totals', async (req, res) => {
     const dateStrings = [];
 
     for (let i = 0; i < 7; i++) {
-        const date = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
-        date.setDate(date.getDate() - i);
-        // Fallback string manually to YYYY-MM-DD
-        const yyyy = date.getFullYear();
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const dd = String(date.getDate()).padStart(2, '0');
-        dateStrings.push(`${yyyy}-${mm}-${dd}`);
+      const date = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+      date.setDate(date.getDate() - i);
+      // Fallback string manually to YYYY-MM-DD
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      dateStrings.push(`${yyyy}-${mm}-${dd}`);
     }
 
     const user = await UserDetails.findOne({ userId: userIdd });
@@ -438,27 +438,27 @@ router.get('/:userId/weekly-totals', async (req, res) => {
     // Process each meal
     user.food.forEach(meal => {
       if (meal.createdAt) {
-          const mealDate = getISTDateStr(new Date(meal.createdAt));
+        const mealDate = getISTDateStr(new Date(meal.createdAt));
 
-          // Only process if meal is within our 7-day window
-          if (dateStrings.includes(mealDate)) {
-            if (meal.CalorieResponse) {
-              const [calories, carbs, protein, fat] = meal.CalorieResponse.split(',').map(Number);
+        // Only process if meal is within our 7-day window
+        if (dateStrings.includes(mealDate)) {
+          if (meal.CalorieResponse) {
+            const [calories, carbs, protein, fat] = meal.CalorieResponse.split(',').map(Number);
 
-              if (!isNaN(calories) && !isNaN(carbs) && !isNaN(protein) && !isNaN(fat)) {
-                dailyBreakdown[mealDate].calories += calories;
-                dailyBreakdown[mealDate].carbs += carbs;
-                dailyBreakdown[mealDate].protein += protein;
-                dailyBreakdown[mealDate].fat += fat;
-                dailyBreakdown[mealDate].mealCount += 1;
+            if (!isNaN(calories) && !isNaN(carbs) && !isNaN(protein) && !isNaN(fat)) {
+              dailyBreakdown[mealDate].calories += calories;
+              dailyBreakdown[mealDate].carbs += carbs;
+              dailyBreakdown[mealDate].protein += protein;
+              dailyBreakdown[mealDate].fat += fat;
+              dailyBreakdown[mealDate].mealCount += 1;
 
 
-            weeklyTotals.calories += calories;
-            weeklyTotals.carbs += carbs;
-            weeklyTotals.protein += protein;
-            weeklyTotals.fat += fat;
+              weeklyTotals.calories += calories;
+              weeklyTotals.carbs += carbs;
+              weeklyTotals.protein += protein;
+              weeklyTotals.fat += fat;
+            }
           }
-         }
         }
       }
     });
@@ -642,18 +642,18 @@ router.get('/', (req, res) => {
 router.post('/:userId/meal-analysis', async (req, res) => {
   try {
     const { mealType } = req.body;
-    
+
     if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
       return res.status(400).json({ error: 'Invalid user ID format' });
     }
-    
+
     if (!mealType) {
       return res.status(400).json({ error: 'Meal type is required' });
     }
 
     const userIdd = new mongoose.Types.ObjectId(req.params.userId);
     const user = await UserDetails.findOne({ userId: userIdd });
-    
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -679,7 +679,7 @@ router.post('/:userId/meal-analysis', async (req, res) => {
         const [calories, carbs, protein, fat] = meal.CalorieResponse.split(',').map(x => x?.trim());
         macros = `(${calories} calories, ${carbs}g carbs, ${protein}g protein, ${fat}g fat)`;
       }
-      foodDescriptions += `${i+1}. ${mealName} ${macros}\n`;
+      foodDescriptions += `${i + 1}. ${mealName} ${macros}\n`;
     });
 
     // Request the AI backend
@@ -688,8 +688,8 @@ router.post('/:userId/meal-analysis', async (req, res) => {
       food_items: foodDescriptions
     });
 
-    return res.status(200).json({ 
-      analysis: pythonResponse.data.analysis 
+    return res.status(200).json({
+      analysis: pythonResponse.data.analysis
     });
 
   } catch (err) {

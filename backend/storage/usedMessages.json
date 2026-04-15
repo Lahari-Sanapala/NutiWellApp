@@ -1,14 +1,20 @@
 {
-  "2026-04-14": {
+  "2026-04-15": {
     "healthTips": [
-      "Eat slowly and mindfully."
+      "Regular handwashing is one of the best ways to prevent the spread of illness."
     ],
     "dietTips": [
-      "Try cutting down on carbs for better energy."
+      "Eat smaller portions to help manage your weight.",
+      "Read nutrition labels to make informed food choices.",
+      "Start your day with a high-protein breakfast to keep you full longer."
     ],
-    "mentalHealthTips": [],
+    "mentalHealthTips": [
+      "Take 5 minutes to meditate for your mental well-being.",
+      "Take time each day to relax and unwind; it's essential for mental well-being.",
+      "Seek professional help if you're struggling; it's a sign of strength, not weakness."
+    ],
     "flags": {
-      "healthTip12": true
+      "healthTip20": true
     }
   }
 }

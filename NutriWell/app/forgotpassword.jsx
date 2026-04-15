@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import Constants from "expo-constants";
@@ -20,16 +20,26 @@ export default function ForgotPassword() {
     }
 
     try {
-      const res = await fetch("http://10.33.15.69:3000/api/auth/forgot-password", {
+      const res = await fetch(`${baseURL}/api/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
 
       const data = await res.json();
-      setMessage(data.message || 'Check your email for the reset link');
+
+      if (!res.ok) {
+        setErrorMessage(data.message || 'Failed to send reset link.');
+        setMessage('');
+        return;
+      }
+
+      setMessage('Mail sent correctly. Please check your inbox.');
       setErrorMessage('');
-      console.log("message", message);
+      console.log("message", data.message);
+      
+      Alert.alert('Success', 'Mail sent correctly. Please check your inbox.');
+
       // Optional redirect after 5 seconds
       setTimeout(() => {
         router.push('/signup');
@@ -45,7 +55,7 @@ export default function ForgotPassword() {
     <View style={styles.container}>
       {/* Back button */}
       <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-        <Ionicons name="arrow-back" size={24} color="#6C63FF" />
+        <Ionicons name="arrow-back" size={24} color="#2F4F4F" />
       </TouchableOpacity>
 
       <Text style={styles.title}>Forgot Password</Text>
@@ -72,7 +82,7 @@ export default function ForgotPassword() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#BEAFDA',
+    backgroundColor: '#f8ede1ff',
     padding: 20,
     justifyContent: 'center',
   },
@@ -86,6 +96,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
+    color: '#2F4F4F',
   },
   input: {
     backgroundColor: '#f0f2f5',
@@ -94,7 +105,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   button: {
-    backgroundColor: '#6C63FF',
+    backgroundColor: '#2F4F4F',
     padding: 14,
     borderRadius: 12,
     alignItems: 'center',
